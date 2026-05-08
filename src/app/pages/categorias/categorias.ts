@@ -191,7 +191,7 @@ export class Categorias implements OnInit, OnDestroy, AfterViewChecked {
     this.shouldScrollChat = true;
 
     try {
-      const response = await fetch('https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/ia/chatbot', {
+      const response = await fetch('https://api.tripgoapp.com/ia/chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mensaje: text })

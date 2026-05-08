@@ -1,21 +1,63 @@
 <app-nav></app-nav>
 
-<div class="content">
-  <section class="contact-section">
+<div class="page">
 
-    <header class="contact-header">
-      <span class="badge">{{ 'CONTACT.TITLE' | translate }}</span>
-      <h2>{{ 'CONTACT.TITLE' | translate }}</h2>
+  <div class="hero">
+    <div class="blob1"></div>
+    <div class="blob2"></div>
+    <div class="blob3"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <i class="fas fa-map-marker-alt"></i>
+        {{ 'CONTACT.BADGE' | translate }}
+      </div>
+      <h1>{{ 'CONTACT.TITLE_LINE1' | translate }}<br>{{ 'CONTACT.TITLE_LINE2' | translate }}</h1>
       <p>{{ 'CONTACT.SUBTITLE' | translate }}</p>
-    </header>
+      <div class="stats-row">
+        <div class="stat-pill"><i class="fas fa-map"></i> 12 {{ 'CONTACT.STATS.MUNICIPIOS' | translate }}</div>
+        <div class="stat-pill"><i class="fas fa-store"></i> +200 {{ 'CONTACT.STATS.LUGARES' | translate }}</div>
+        <div class="stat-pill"><i class="fas fa-users"></i> 5K+ {{ 'CONTACT.STATS.VIAJEROS' | translate }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="info-strip">
+      <i class="fas fa-info-circle"></i>
+      <p [innerHTML]="'CONTACT.INFO_STRIP' | translate"></p>
+    </div>
+
+    <!-- ── PASOS DEL FLUJO ── -->
+    <div class="step-row">
+      <div class="snode">
+        <div class="sicon on"><i class="fas fa-file-alt"></i></div>
+        <div class="slabel on">{{ 'CONTACT.STEPS.FORM' | translate }}</div>
+      </div>
+      <div class="sline"></div>
+      <div class="snode">
+        <div class="sicon off"><i class="fas fa-envelope"></i></div>
+        <div class="slabel">{{ 'CONTACT.STEPS.LINK' | translate }}</div>
+      </div>
+      <div class="sline"></div>
+      <div class="snode">
+        <div class="sicon off"><i class="fas fa-shield-alt"></i></div>
+        <div class="slabel">{{ 'CONTACT.STEPS.REVIEW' | translate }}</div>
+      </div>
+      <div class="sline"></div>
+      <div class="snode">
+        <div class="sicon off"><i class="fas fa-rocket"></i></div>
+        <div class="slabel">{{ 'CONTACT.STEPS.LIVE' | translate }}</div>
+      </div>
+    </div>
 
     <!-- ── SUCCESS STATE ── -->
     @if (status() === 'success') {
     <div class="feedback-box success">
       <div class="feedback-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="#12916B" stroke-width="1.5" />
-          <path d="M8 12l3 3 5-5" stroke="#12916B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="12" cy="12" r="10" stroke="#12916B" stroke-width="1.5"/>
+          <path d="M8 12l3 3 5-5" stroke="#12916B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <h3>{{ 'CONTACT.SUCCESS.TITLE' | translate }}</h3>
@@ -29,8 +71,8 @@
     <div class="feedback-box error">
       <div class="feedback-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="#DC3545" stroke-width="1.5" />
-          <path d="M12 8v4M12 16h.01" stroke="#DC3545" stroke-width="2" stroke-linecap="round" />
+          <circle cx="12" cy="12" r="10" stroke="#DC3545" stroke-width="1.5"/>
+          <path d="M12 8v4M12 16h.01" stroke="#DC3545" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </div>
       <h3>{{ 'CONTACT.ERROR.TITLE' | translate }}</h3>
@@ -43,37 +85,128 @@
     @if (status() !== 'success') {
     <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
 
+      <!-- Tipo de negocio -->
+      <div class="form-group">
+        <div class="flabel"><i class="fas fa-th-large"></i> {{ 'CONTACT.FORM.TYPE_LABEL' | translate }}</div>
+        <div class="type-main-grid">
+          <div class="tcard" [class.sel]="selectedType === 'Restaurante'" (click)="pickMain('Restaurante')">
+            <i class="fas fa-utensils"></i><span>Restaurante</span>
+          </div>
+          <div class="tcard" [class.sel]="selectedType === 'Hotel'" (click)="pickMain('Hotel')">
+            <i class="fas fa-hotel"></i><span>Hotel / Hostal</span>
+          </div>
+          <div class="tcard" [class.sel]="selectedType === 'Café'" (click)="pickMain('Café')">
+            <i class="fas fa-coffee"></i><span>Café / Bar</span>
+          </div>
+          <div class="tcard" [class.sel]="selectedType === 'Tour operador'" (click)="pickMain('Tour operador')">
+            <i class="fas fa-compass"></i><span>Tour / Aventura</span>
+          </div>
+          <div class="tcard" [class.sel]="selectedType === 'Camping'" (click)="pickMain('Camping')">
+            <i class="fas fa-campground"></i><span>Camping / Eco</span>
+          </div>
+          <div class="tcard otros-trigger"
+               [class.sel]="otrosOpen || isOtroSelected()"
+               (click)="toggleOtros()">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>{{ isOtroSelected() ? selectedType : 'Ver más...' }}</span>
+          </div>
+        </div>
+
+        <!-- Panel expandible 19 categorías -->
+        @if (otrosOpen) {
+        <div class="otros-panel">
+          <div class="otros-title"><i class="fas fa-list"></i> Todas las categorías</div>
+          <div class="otros-grid">
+            @for (cat of allCategories; track cat.val) {
+            <div class="ocard" [class.sel]="selectedType === cat.val" (click)="pickOtro(cat.val)">
+              <i [class]="cat.icon"></i>
+              <span>{{ cat.label }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+
+        @if (typeInvalid) {
+        <span class="field-error">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ 'CONTACT.FORM.TYPE_INVALID' | translate }}
+        </span>
+        }
+      </div>
+
+      <!-- Nombre del negocio -->
       <div class="form-group" [class.has-error]="name.invalid && name.touched">
-        <input type="text" id="name" formControlName="name" placeholder=" " autocomplete="organization">
-        <label for="name">{{ 'CONTACT.FORM.NAME_BS' | translate }}</label>
+        <label class="flabel" for="name">
+          <i class="fas fa-store"></i> {{ 'CONTACT.FORM.NAME_BS' | translate }}
+        </label>
+        <input type="text" id="name" formControlName="name"
+               placeholder="Ej: Restaurante El Mirador" autocomplete="organization">
         @if (name.invalid && name.touched) {
-        <span class="field-error">{{ 'CONTACT.FORM.NAME_BS_INVALID' | translate }}</span>
+        <span class="field-error">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ 'CONTACT.FORM.NAME_BS_INVALID' | translate }}
+        </span>
         }
       </div>
 
-      <div class="form-group" [class.has-error]="email.invalid && email.touched">
-        <input type="email" id="email" formControlName="email" placeholder=" " autocomplete="email">
-        <label for="email">{{ 'CONTACT.FORM.EMAIL_BS' | translate }}</label>
-        @if (email.invalid && email.touched) {
-        <span class="field-error">{{ 'CONTACT.FORM.EMAIL_BS_INVALID' | translate }}</span>
-        }
+      <!-- Email + Teléfono -->
+      <div class="row-2">
+        <div class="form-group" [class.has-error]="email.invalid && email.touched">
+          <label class="flabel" for="email">
+            <i class="fas fa-envelope"></i> {{ 'CONTACT.FORM.EMAIL_BS' | translate }}
+          </label>
+          <input type="email" id="email" formControlName="email"
+                 placeholder="tu@correo.com" autocomplete="email">
+          <div class="fhint"><i class="fas fa-lock"></i> {{ 'CONTACT.FORM.EMAIL_HINT' | translate }}</div>
+          @if (email.invalid && email.touched) {
+          <span class="field-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ 'CONTACT.FORM.EMAIL_BS_INVALID' | translate }}
+          </span>
+          }
+        </div>
+        <div class="form-group" [class.has-error]="phone.invalid && phone.touched">
+          <label class="flabel" for="phone">
+            <i class="fas fa-phone"></i> {{ 'CONTACT.FORM.PHONE_BS' | translate }}
+          </label>
+          <input type="tel" id="phone" formControlName="phone"
+                 placeholder="+57 300 000 0000" autocomplete="tel">
+          <div class="fhint"><i class="fas fa-comment"></i> {{ 'CONTACT.FORM.PHONE_HINT' | translate }}</div>
+          @if (phone.invalid && phone.touched) {
+          <span class="field-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ 'CONTACT.FORM.PHONE_INVALID' | translate }}
+          </span>
+          }
+        </div>
       </div>
 
+      <!-- Mensaje -->
       <div class="form-group" [class.has-error]="message.invalid && message.touched">
-        <textarea id="message" rows="4" formControlName="message" placeholder=" "></textarea>
-        <label for="message">{{ 'CONTACT.FORM.MESSAGE_BS' | translate }}</label>
+        <label class="flabel" for="message">
+          <i class="fas fa-comment-alt"></i> {{ 'CONTACT.FORM.MESSAGE_BS' | translate }}
+        </label>
+        <textarea id="message" rows="3" formControlName="message"
+                  placeholder="{{ 'CONTACT.FORM.MESSAGE_PLACEHOLDER' | translate }}"></textarea>
+        <div class="fhint"><i class="fas fa-magic"></i> {{ 'CONTACT.FORM.MESSAGE_HINT' | translate }}</div>
         @if (message.invalid && message.touched) {
-        <span class="field-error">{{ 'CONTACT.FORM.MESSAGE_BS_INVALID' | translate }}</span>
+        <span class="field-error">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ 'CONTACT.FORM.MESSAGE_BS_INVALID' | translate }}
+        </span>
         }
       </div>
 
-      <button type="submit" class="btn-primary" [disabled]="contactForm.invalid || status() === 'loading'"
-        [class.loading]="status() === 'loading'">
+      <button type="submit" class="btn-primary"
+              [disabled]="contactForm.invalid || status() === 'loading'"
+              [class.loading]="status() === 'loading'">
         @if (status() === 'loading') {
-        <span class="spinner"></span>
+          <span class="spinner"></span>
           {{ 'COMMON.SENDING' | translate }}
         } @else {
-        {{ 'COMMON.SEND' | translate }}
+          <i class="fas fa-paper-plane"></i>
+          {{ 'COMMON.SEND' | translate }}
         }
       </button>
 
@@ -82,12 +215,12 @@
 
     <div class="contact-info">
       <h3>{{ 'CONTACT.CONTACT_INFO_TITLE' | translate }}</h3>
-      <p>&#64;tripgo.com</p>
-      <p>+57 300 123 4567</p>
+      <p>tripgoservice&#64;gmail.com</p>
+      <p>+57 3147212090</p>
       <p>Armenia, Colombia</p>
     </div>
 
-  </section>
+  </div>
 </div>
 
 <app-footer></app-footer>

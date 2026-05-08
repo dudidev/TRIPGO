@@ -24,32 +24,28 @@ import { EmpresaComponent } from './pages/empresa/empresa';
 import { empresaGuard } from './guards/empresa-guard';
 
 export const routes: Routes = [
-  { path: '', component: Home, data: { animation: 'home' } },
-  { path: 'login', component: Login, data: { animation: 'login' } },
-  { path: 'register', component: Register, data: { animation: 'register' } },
-  { path: 'contact', component: Contact, data: { animation: 'contact' } },
+  { path: '', component: Home },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
+  { path: 'contact', component: Contact },
 
   { path: 'principal', component: PrincipalComponent },
 
-  // ✅ PUEBLO → TIPOS
-  { path: 'lugares/:townSlug', component: Categorias, data: { animation: 'lugares' } },
+  { path: 'lugares/:townSlug', component: Categorias },
+  { path: 'lugares/:townSlug/tipo/:idTipo', component: LugaresComponent },
 
-  // ✅ TIPOS → ESTABLECIMIENTOS
-  { path: 'lugares/:townSlug/tipo/:idTipo', component: LugaresComponent, data: { animation: 'lugares' } },
+  { path: 'detalles/:slug', component: Detalles },
 
-  { path: 'detalles/:slug', component: Detalles, data: { animation: 'detalles' } },
+  { path: 'editar-cuenta', component: EditarCuentaComponent, canActivate: [authGuard] },
 
-  { path: 'editar-cuenta', component: EditarCuentaComponent,  canActivate: [authGuard], data: { animation: 'editar-cuenta' } },
+  { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard] },
+  { path: 'about', component: About },
+  { path: 'prices', component: Prices },
+  { path: 'soporte', component: Soporte, canActivate: [authGuard] },
+  { path: 'recomendaciones', component: Recomendaciones, canActivate: [authGuard] },
 
-  // ✅ Ruta exclusiva empresa
-  { path: 'empresa', component: EmpresaComponent, canActivate: [empresaGuard], data: { animation: 'empresa' } },
-  {path: 'about', component: About, data: { animation: 'about' } },
-  {path: 'prices', component: Prices, data: { animation: 'prices' } },
-  {path: 'soporte', component: Soporte, canActivate: [authGuard], data: { animation: 'soporte' } },
-  {path: 'recomendaciones', component: Recomendaciones, canActivate: [authGuard], data: { animation: 'recomendaciones' } },
-
-  {path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password')},
-  {path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password')},
+  { path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password') },
+  { path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password') },
 
   { path: '**', redirectTo: '' },
 ];

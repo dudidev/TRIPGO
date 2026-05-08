@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '/backend',
+  apiBaseUrl: 'https://api.tripgoapp.com'
 };

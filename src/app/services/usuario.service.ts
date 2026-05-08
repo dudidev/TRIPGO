@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
 
-private api = "https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/usuarios";  constructor(private http: HttpClient) {}
+private api = "https://api.tripgoapp.com/usuarios";  constructor(private http: HttpClient) {}
 
   obtenerUsuario(id:number):Observable<any>{
     return this.http.get(`${this.api}/${id}`);

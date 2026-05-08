@@ -26,11 +26,27 @@ export class AuthService {
       })
     );
   }
+  getAuthChecked() {
+  return this.authChecked;  // retorna el signal directamente
+}
+
+  googleLogin(token: string): Observable<any> {
+  return this.http.post(
+    `${environment.apiBaseUrl}/auth/google`,
+    { token },
+    {withCredentials: true}
+  ).pipe(
+    tap((res: any) => {
+      this.currentUser.set(res.usuario);
+      this.authChecked.set(true);
+    })
+  );
+}
 
   logout(): void {
     this.http.post(
       `${environment.apiBaseUrl}/auth/logout`,
-      {},
+      {}, 
       { withCredentials: true }
     ).subscribe({
       next: () => {

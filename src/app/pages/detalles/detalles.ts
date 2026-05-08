@@ -260,7 +260,7 @@ export class Detalles implements OnInit {
 
     console.log("Cargando servicios para ID:", this.idEstablecimiento);
 
-    this.http.get(`https://tripgo-backend-arehbhbubshxdpg7.chilecentral-01.azurewebsites.net/servicios/${this.idEstablecimiento}`)
+    this.http.get(`${this.apiUrl}/servicios/${this.idEstablecimiento}`)
       .subscribe({
         next: (res: any) => {
           console.log("SERVICIOS BACKEND:", res);
