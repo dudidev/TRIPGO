@@ -1,0 +1,17 @@
+<div style="padding:40px">
+
+  <h1>Onboarding TripGO</h1>
+
+  <p *ngIf="loading">
+    Cargando...
+  </p>
+
+  <p *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+
+  <pre *ngIf="solicitud">
+{{ solicitud | json }}
+  </pre>
+
+</div>
