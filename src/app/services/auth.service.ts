@@ -21,7 +21,7 @@ export class AuthService {
       { withCredentials: true }
     ).pipe(
       tap((res: any) => {
-        this.currentUser.set(res.user);
+        this.currentUser.set(res.usuario);
         this.authChecked.set(true);
       })
     );
