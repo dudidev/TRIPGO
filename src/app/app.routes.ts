@@ -14,7 +14,9 @@ import { Prices } from './pages/prices/prices';
 import { Soporte } from './pages/soporte/soporte';
 import { Recomendaciones } from './pages/recomendaciones/recomendaciones';
 import { authGuard } from './services/auth.guard';
-
+import { TripGoAdmin } from './pages/trip-go-admin/trip-go-admin';
+import { adminGuard } from './guards/admin.guards';
+import { Onboarding } from './pages/onboarding/onboarding';
 
 
 // ✅ Tu empresa está en: src/app/pages/empresa/empresa.ts
@@ -43,7 +45,8 @@ export const routes: Routes = [
   { path: 'prices', component: Prices },
   { path: 'soporte', component: Soporte, canActivate: [authGuard] },
   { path: 'recomendaciones', component: Recomendaciones, canActivate: [authGuard] },
-
+  {path:'trip-go-admin', component: TripGoAdmin},
+  { path: 'onboarding/:token', component: Onboarding },
   { path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password') },
   { path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password') },
 
