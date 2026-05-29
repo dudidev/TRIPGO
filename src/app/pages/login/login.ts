@@ -62,13 +62,29 @@ export class Login {
 
           const user = this.authService.getCurrentUser();
 
+          console.log('USUARIO LOGIN:', user);
+          console.log('ROL LOGIN:', user?.rol);
+
           setTimeout(() => {
-            if (user?.rol === 'empresa') {
+
+            if (user?.rol === 'admin') {
+
+              this.router.navigate(['/trip-go-admin']);
+
+            } else if (user?.rol === 'empresa') {
+
               this.router.navigate(['/empresa']);
+
             } else {
-              const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/principal';
+
+              const returnUrl =
+                this.route.snapshot.queryParams['returnUrl']
+                || '/principal';
+
               this.router.navigateByUrl(returnUrl);
+
             }
+
           }, 800);
         });
       },
@@ -120,15 +136,30 @@ export class Login {
           this.showSuccess('Inicio de sesión con Google exitoso');
 
           setTimeout(() => {
-            const user = this.authService.getCurrentUser();
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/principal';
 
-            if (user?.rol === 'empresa') {
-              this.router.navigate(['/empresa']);
-            } else {
-              this.router.navigateByUrl(returnUrl);
-            }
-          }, 800);
+          const user = this.authService.getCurrentUser();
+
+          console.log('USUARIO LOGIN:', user);
+          console.log('ROL LOGIN:', user?.rol);
+
+          if (user?.rol === 'admin') {
+
+            this.router.navigate(['/trip-go-admin']);
+
+          } else if (user?.rol === 'empresa') {
+
+            this.router.navigate(['/empresa']);
+
+          } else {
+
+            const returnUrl =
+              this.route.snapshot.queryParams['returnUrl']
+              || '/principal';
+
+            this.router.navigateByUrl(returnUrl);
+          }
+
+        }, 800);
         });
       },
       error: () => {
