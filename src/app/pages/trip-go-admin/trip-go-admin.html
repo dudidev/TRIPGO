@@ -1,0 +1,318 @@
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">
+        <div class="logo-box">
+          <i class="fa-solid fa-earth-americas"></i>
+        </div>
+
+        <div class="logo-text">
+          <h2>TripGO</h2>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <div class="admin-profile">
+        <div class="profile-avatar">A</div>
+
+        <div class="profile-info">
+          <strong>Administrador</strong>
+          <span>TripGO Team</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENU -->
+
+    <nav class="sidebar-menu">
+      <button
+        class="menu-item"
+        [class.active]="menuActivo === 'dashboard'"
+        (click)="cambiarMenu('dashboard')"
+      >
+        <i class="fa-solid fa-chart-line"></i>
+        Dashboard
+      </button>
+
+      <button
+        class="menu-item"
+        [class.active]="menuActivo === 'solicitudes'"
+        (click)="cambiarMenu('solicitudes')"
+      >
+        <i class="fa-solid fa-file-circle-check"></i>
+        Solicitudes
+      </button>
+     
+    </nav>
+
+    <!-- BOTTOM -->
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-bottom">
+        <button class="logout-btn" (click)="authService.logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="admin-main">
+    <!-- TOPBAR -->
+
+    <section class="topbar">
+      <div class="topbar-left">
+        <h1>Dashboard Administrativo</h1>
+
+        <p>Gestiona solicitudes y negocios de TripGO</p>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input
+            type="text"
+            [(ngModel)]="textoBusqueda"
+            (input)="aplicarFiltro()"
+            placeholder="Buscar solicitud..."
+          />
+        </div>
+
+        <button class="notification-btn">
+          <i class="fa-solid fa-bell"></i>
+          <span>4</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STATS -->
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon teal">
+          <i class="fa-solid fa-file-circle-check"></i>
+        </div>
+
+        <div class="stat-content">
+          <h2>{{ totalSolicitudes }}</h2>
+          <span>Solicitudes</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+
+        <div class="stat-content">
+          <h2>{{ totalPendientes }}</h2>
+          <span>Pendientes</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <div class="stat-content">
+          <h2>{{ totalAprobadas }}</h2>
+          <span>Aprobadas</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+
+        <div class="stat-content">
+          <h2>{{ totalRevision }}</h2>
+          <span>En revisión</span>
+        </div>
+      </div>
+    </section>
+    <!-- INSIGHT -->
+
+    <!-- FILTERS -->
+
+    <section class="filters">
+      <button
+        class="filter-btn"
+        [class.active]="filtroActivo === 'todos'"
+        (click)="cambiarFiltro('todos')"
+      >
+        Todos
+      </button>
+
+      <button
+        class="filter-btn"
+        [class.active]="filtroActivo === 'pendiente'"
+        (click)="cambiarFiltro('pendiente')"
+      >
+        Pendientes
+      </button>
+
+      <button
+        class="filter-btn"
+        [class.active]="filtroActivo === 'en_revision'"
+        (click)="cambiarFiltro('en_revision')"
+      >
+        En revisión
+      </button>
+
+      <button
+        class="filter-btn"
+        [class.active]="filtroActivo === 'aprobado'"
+        (click)="cambiarFiltro('aprobado')"
+      >
+        Aprobados
+      </button>
+    </section>
+
+    <!-- TABLE -->
+
+    <section class="table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Negocio</th>
+            <th>Ubicación</th>
+            <th>Estado</th>
+            <th>Fotos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let solicitud of solicitudesFiltradas">
+            <td>
+              <div class="business-cell">
+                <img [src]="solicitud.imagen" alt="" />
+
+                <div>
+                  <strong>
+                    {{ solicitud.nombre }}
+                  </strong>
+
+                  <span>
+                    {{ solicitud.categoria }}
+                  </span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              {{ solicitud.ubicacion }}
+            </td>
+
+            <td>
+              <div class="status" [ngClass]="solicitud.estado">
+                {{ solicitud.estado }}
+              </div>
+            </td>
+
+            <td>
+              {{ solicitud.fotos }}
+            </td>
+
+            <td>
+              <div class="actions">
+                <button class="details-btn" (click)="abrirDetalle(solicitud)">Ver detalle</button>
+
+                <!-- EN REVISIÓN -->
+
+                <ng-container *ngIf="solicitud.estado === 'en_revision'">
+                  <button class="approve-btn" (click)="aprobarSolicitud(solicitud.id)">
+                    Aprobar
+                  </button>
+
+                  <button class="reject-btn" (click)="rechazarSolicitud(solicitud.id)">
+                    Rechazar
+                  </button>
+                </ng-container>
+
+                <!-- PENDIENTE -->
+
+                <span *ngIf="solicitud.estado === 'pendiente'" class="waiting-badge">
+                  Esperando formulario completo
+                </span>
+
+                <!-- APROBADO -->
+
+                <span *ngIf="solicitud.estado === 'aprobado'" class="approved-badge">
+                  Negocio aprobado
+                </span>
+
+                <!-- RECHAZADO -->
+
+                <span *ngIf="solicitud.estado === 'rechazado'" class="rejected-badge">
+                  Solicitud rechazada
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-content">
+      <button class="close-btn" (click)="cerrarDetalle()">✕</button>
+
+      <img [src]="solicitudSeleccionada?.imagen" class="modal-image" alt="" />
+
+      <h2>
+        {{ solicitudSeleccionada?.nombre }}
+      </h2>
+
+      <p>
+        {{ solicitudSeleccionada?.descripcion }}
+      </p>
+
+      <div class="modal-info">
+        <p>
+          <strong>Ubicación:</strong>
+          {{ solicitudSeleccionada?.ubicacion }}
+        </p>
+
+        <p>
+          <strong>Estado:</strong>
+          {{ solicitudSeleccionada?.estado }}
+        </p>
+
+        <p>
+          <strong>Fotos:</strong>
+          {{ solicitudSeleccionada?.fotos }}
+        </p>
+
+        <p>
+          <strong>Categoría:</strong>
+          {{ solicitudSeleccionada?.categoria }}
+        </p>
+
+        <p>
+          <strong>Contacto:</strong>
+          {{ solicitudSeleccionada?.nombreContacto }}
+        </p>
+
+        <p>
+          <strong>Correo:</strong>
+          {{ solicitudSeleccionada?.correoContacto }}
+        </p>
+
+        <p>
+          <strong>Servicios:</strong>
+
+          {{ solicitudSeleccionada?.servicios?.join(', ') }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
