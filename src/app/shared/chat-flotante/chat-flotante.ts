@@ -60,7 +60,9 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
     return (
       url.includes('/empresa') ||
       url.includes('/mis-establecimientos') ||
-      url.includes('/detalle-establecimiento')
+      url.includes('/detalle-establecimiento') ||
+      url.includes('/trip-go-admin') ||
+      url.includes('/onboarding')
     );
   }
 
