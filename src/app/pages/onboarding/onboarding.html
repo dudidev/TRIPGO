@@ -1,17 +1,368 @@
-<div style="padding:40px">
+<div class="onboarding-page">
 
-  <h1>Onboarding TripGO</h1>
+  <!-- Loading -->
+  <div *ngIf="loading" class="state-card">
+    <h2>Cargando información...</h2>
+  </div>
 
-  <p *ngIf="loading">
-    Cargando...
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="state-card error">
+    <h2>{{ errorMessage }}</h2>
+  </div>
+
+  <!-- Formulario -->
+  <ng-container *ngIf="!loading && solicitud">
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <span class="hero-badge">
+          TRIPGO PARTNERS
+        </span>
+
+        <h1>
+          Completa tu perfil empresarial
+        </h1>
+
+        <p>
+          Ya recibimos tu solicitud. Ahora necesitamos conocer mejor tu establecimiento para revisarlo y publicarlo en TripGO.
+        </p>
+
+        <div class="hero-steps">
+
+          <div class="step completed">
+            Solicitud recibida
+          </div>
+
+          <div class="step active">
+            Completar perfil
+          </div>
+
+          <div class="step">
+            Revisión
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      class="onboarding-form"
+    >
+
+      <!-- INFORMACIÓN INICIAL -->
+      <section class="card">
+
+        <h2>Información de la solicitud</h2>
+
+        <div class="readonly-grid">
+
+          <div>
+            <label>Establecimiento</label>
+            <div class="readonly-box">
+              {{ solicitud.nombre_establecimiento }}
+            </div>
+          </div>
+
+          <div>
+            <label>Contacto</label>
+            <div class="readonly-box">
+              {{ solicitud.nombre_contacto }}
+            </div>
+          </div>
+
+          <div>
+            <label>Correo</label>
+            <div class="readonly-box">
+              {{ solicitud.correo_contacto }}
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <label>Descripción inicial</label>
+
+          <div class="readonly-box description-box">
+            {{ solicitud.descripcion }}
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- CATEGORÍA -->
+      <section class="card">
+
+        <h2>Categoría</h2>
+
+        <select formControlName="categoria">
+
+          <option value="">
+            Selecciona una categoría
+          </option>
+
+          <option value="hotel">Hotel</option>
+          <option value="hostal">Hostal</option>
+          <option value="glamping">Glamping</option>
+          <option value="cabana">Cabaña</option>
+          <option value="ecohotel">Ecohotel</option>
+
+          <option value="restaurante">
+            Restaurante
+          </option>
+
+          <option value="cafe">
+            Café
+          </option>
+
+          <option value="bar">
+            Bar
+          </option>
+
+          <option value="discoteca">
+            Discoteca
+          </option>
+
+          <option value="camping">
+            Camping
+          </option>
+
+          <option value="senderismo">
+            Senderismo
+          </option>
+
+          <option value="cabalgatas">
+            Cabalgatas
+          </option>
+
+          <option value="tour">
+            Tour Operador
+          </option>
+
+        </select>
+
+      </section>
+
+      <!-- UBICACIÓN -->
+      <section class="card">
+
+        <h2>Ubicación</h2>
+
+        <div class="form-grid">
+
+          <div>
+
+            <label>Departamento</label>
+
+            <input
+              type="text"
+              formControlName="departamento"
+            />
+
+          </div>
+
+          <div>
+
+            <label>Municipio</label>
+
+            <input
+              type="text"
+              formControlName="municipio"
+            />
+
+          </div>
+
+        </div>
+
+        <label>Dirección</label>
+
+        <input
+          type="text"
+          formControlName="direccion"
+        />
+
+        <label>Google Maps</label>
+
+        <input
+          type="text"
+          formControlName="googleMaps"
+        />
+
+      </section>
+
+      <!-- CONTACTO -->
+      <section class="card">
+
+        <h2>Contacto operativo</h2>
+
+        <label>Representante</label>
+
+        <input
+          type="text"
+          formControlName="representante"
+        />
+
+        <div class="form-grid">
+
+          <div>
+
+            <label>Teléfono</label>
+
+            <input
+              type="text"
+              formControlName="telefono"
+            />
+
+          </div>
+
+          <div>
+
+            <label>WhatsApp</label>
+
+            <input
+              type="text"
+              formControlName="whatsapp"
+            />
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- SERVICIOS -->
+      <section class="card">
+
+        <h2>Servicios disponibles</h2>
+
+        <div class="services-grid">
+
+  <label
+    *ngFor="let service of services"
+    class="service-item"
+    [class.selected]="isServiceSelected(service)"
+  >
+
+    <input
+      type="checkbox"
+      [checked]="isServiceSelected(service)"
+      (change)="toggleService(service)"
+    >
+
+    {{ service }}
+
+  </label>
+
+</div>
+
+      </section>
+
+      <!-- EXPERIENCIA -->
+      <section class="card">
+
+        <h2>Experiencia turística</h2>
+
+        <label>
+          Cuéntanos más sobre tu establecimiento
+        </label>
+
+        <textarea
+          rows="6"
+          formControlName="descripcionCompleta"
+        ></textarea>
+
+        <label>
+          ¿Qué hace único tu establecimiento?
+        </label>
+
+        <textarea
+          rows="5"
+          formControlName="queHaceUnico"
+        ></textarea>
+
+      </section>
+
+<!-- FOTOS -->
+<section class="card">
+
+  <h2>Fotografías</h2>
+
+  <p class="photo-hint">
+    Mínimo {{ MIN_PHOTOS }} fotos · Máximo {{ MAX_PHOTOS }} fotos
+    <span *ngIf="photoCount > 0">&nbsp;·&nbsp;{{ photoCount }} seleccionadas</span>
   </p>
 
-  <p *ngIf="errorMessage">
-    {{ errorMessage }}
+  <!-- Previsualizaciones -->
+  <div class="photo-grid" *ngIf="photoPreviews.length > 0">
+    <div
+      class="photo-preview"
+      *ngFor="let photo of photoPreviews; let i = index"
+    >
+      <img [src]="photo.previewUrl" [alt]="'Foto ' + (i + 1)" />
+      <button
+        type="button"
+        class="remove-photo"
+        (click)="removePhoto(i)"
+        [disabled]="submitting"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Zona de subida (oculta si ya llegamos al máximo) -->
+  <div class="photo-upload" *ngIf="photoPreviews.length < MAX_PHOTOS">
+    <p>Arrastra imágenes aquí o selecciona archivos</p>
+    <label class="upload-btn">
+      Seleccionar fotos
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        (change)="onFileSelected($event)"
+        [disabled]="submitting"
+      />
+    </label>
+  </div>
+
+</section>
+
+<!-- BOTÓN -->
+<div class="submit-container">
+
+  <!-- Error de envío -->
+  <p class="submit-error" *ngIf="submitError">
+    {{ submitError }}
   </p>
 
-  <pre *ngIf="solicitud">
-{{ solicitud | json }}
-  </pre>
+  <!-- Éxito -->
+  <div class="success-card" *ngIf="submitSuccess">
+    <h3>¡Solicitud enviada!</h3>
+    <p>Estamos revisando tu información y te contactaremos pronto.</p>
+  </div>
+
+  <button
+    *ngIf="!submitSuccess"
+    type="submit"
+    class="submit-btn"
+    [disabled]="submitting"
+  >
+    {{ submitting ? 'Enviando...' : 'Enviar para revisión' }}
+  </button>
+
+</div>
+
+    </form>
+
+  </ng-container>
 
 </div>
