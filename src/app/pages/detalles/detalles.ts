@@ -254,16 +254,12 @@ export class Detalles implements OnInit {
   cargarServicios(): void {
 
     if (!this.idEstablecimiento) {
-      console.log("No hay idEstablecimiento aún");
       return;
     }
-
-    console.log("Cargando servicios para ID:", this.idEstablecimiento);
 
     this.http.get(`${this.apiUrl}/servicios/${this.idEstablecimiento}`)
       .subscribe({
         next: (res: any) => {
-          console.log("SERVICIOS BACKEND:", res);
           this.initMenu(res.servicios); 
         },
         error: (err) => {
@@ -364,9 +360,6 @@ private actualizarCalculo(): void {
 
 // calculadora ─────────────────────────────────────
 private initMenu(raw: any): void {
-  console.log("RAW DATA:", raw);
-
- 
   if (Array.isArray(raw) && raw.length > 0) {
     
 

@@ -18,7 +18,6 @@ export class ContactService {
 
   crearSolicitud(payload: any): Observable<any> {
     
-    console.log('PAYLOAD ENVIADO:', payload);
 
     return this.http.post(
       this.API_URL,

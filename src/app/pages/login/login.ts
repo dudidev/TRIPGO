@@ -62,9 +62,6 @@ export class Login {
 
           const user = this.authService.getCurrentUser();
 
-          console.log('USUARIO LOGIN:', user);
-          console.log('ROL LOGIN:', user?.rol);
-
           setTimeout(() => {
 
             if (user?.rol === 'admin') {
@@ -138,9 +135,6 @@ export class Login {
           setTimeout(() => {
 
           const user = this.authService.getCurrentUser();
-
-          console.log('USUARIO LOGIN:', user);
-          console.log('ROL LOGIN:', user?.rol);
 
           if (user?.rol === 'admin') {
 

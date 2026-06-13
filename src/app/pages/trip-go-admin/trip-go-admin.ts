@@ -58,8 +58,6 @@ export class TripGoAdmin implements OnInit {
       const user =
         this.authService.getCurrentUser();
 
-      console.log('USER ADMIN:', user);
-
       if (!user) {
 
         this.errorMessage =
@@ -104,7 +102,6 @@ export class TripGoAdmin implements OnInit {
 
     this.adminService.getSolicitudes().subscribe({
       next: (response: any) => {
-        console.log('SOLICITUDES:', response);
 
         this.solicitudes = response.solicitudes.map((s: any) => ({
           id: s.id_solicitud,

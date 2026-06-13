@@ -122,8 +122,6 @@ export class Contact {
    this.contactSvc.crearSolicitud(payload).subscribe({
   next: (response) => {
 
-    console.log('SOLICITUD CREADA:', response);
-
     this.status.set('success');
 
     this.contactForm.reset();

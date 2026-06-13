@@ -121,7 +121,6 @@ export class ChatFlotante implements AfterViewChecked, OnInit, OnDestroy {
 
     this.aiService.preguntarIA(text).subscribe({
       next: (response: any) => {
-        console.log('Respuesta chatbot:', response);
 
         let aiText = '';
         let lugares: any[] = [];
